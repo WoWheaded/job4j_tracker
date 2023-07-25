@@ -17,7 +17,7 @@ public class Library {
         massiveOfBook[0] = book4;
         massiveOfBook[3] = book1;
         for (int i = 0; i < massiveOfBook.length; i++) {
-            if (massiveOfBook[i].getName().equals("Clean code")) {
+            if ("Clean code".equals(massiveOfBook[i].getName())) {
                 System.out.println("Поиск книги Clean code: ");
                 System.out.println(massiveOfBook[i].getName() + " - " + massiveOfBook[i].getCountsPepper());
             }
