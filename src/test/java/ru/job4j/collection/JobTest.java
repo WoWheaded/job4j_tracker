@@ -1,8 +1,11 @@
 package ru.job4j.collection;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.Comparator;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
 public class JobTest {
     @Test
     public void whenComparatorByNameAndPriority() {
@@ -13,6 +16,7 @@ public class JobTest {
         );
         assertThat(rsl).isLessThan(0);
     }
+
     @Test
     public void whenComparatorByNameAndPriorityAsc() {
         Comparator<Job> cmpNamePriority = new JobByName().thenComparing(new JobByPriority());
@@ -22,6 +26,7 @@ public class JobTest {
         );
         assertThat(rsl).isGreaterThan(0);
     }
+
     @Test
     public void whenComparatorByNameAsc() {
         Comparator<Job> cmpNamePriority = new JobByName();
@@ -31,6 +36,7 @@ public class JobTest {
         );
         assertThat(rsl).isLessThan(0);
     }
+
     @Test
     public void whenComparatorByNameDesc() {
         Comparator<Job> cmpNamePriority = new JobDescByName();
@@ -40,6 +46,7 @@ public class JobTest {
         );
         assertThat(rsl).isGreaterThan(0);
     }
+
     @Test
     public void whenComparatorByPriorityAsc() {
         Comparator<Job> cmpNamePriority = new JobByPriority();
@@ -49,6 +56,7 @@ public class JobTest {
         );
         assertThat(rsl).isLessThan(0);
     }
+
     @Test
     public void whenComparatorByPriorityDesc() {
         Comparator<Job> cmpNamePriority = new JobDescByPriority();
