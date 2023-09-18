@@ -2,6 +2,7 @@ package ru.job4j.tracker;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,49 +11,49 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StartUITest {
 
     @Test
-    public void whenCreateItem() {
+    public void whenCreateItem() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(Arrays.asList("0", "Item name", "1"));
-        Tracker tracker = new Tracker();
-        List<UserAction> actions = Arrays.asList(new CreateAction(out), new Exit());
+        MemTracker tracker = new MemTracker();
+        List<UserAction> actions = Arrays.asList(new CreateAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         assertThat(tracker.findAll().get(0).getName()).isEqualTo("Item name");
     }
 
     @Test
-    public void whenReplaceItem() {
-        Tracker tracker = new Tracker();
+    public void whenReplaceItem() throws SQLException {
+        MemTracker tracker = new MemTracker();
         Output out = new StubOutput();
         Item item = tracker.add(new Item("Replaced item"));
         String replacedName = "New item name";
         Input in = new StubInput(
                 Arrays.asList(
                         "0", String.valueOf(item.getId()), replacedName, "1"));
-        List<UserAction> actions = Arrays.asList(new ReplaceAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new ReplaceAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         assertThat(tracker.findById(item.getId()).getName()).isEqualTo(replacedName);
     }
 
     @Test
-    public void whenDeleteItem() {
-        Tracker tracker = new Tracker();
+    public void whenDeleteItem() throws SQLException {
+        MemTracker tracker = new MemTracker();
         Output out = new StubOutput();
         Item item = tracker.add(new Item("Deleted item"));
         Input in = new StubInput(
                 Arrays.asList(
                         "0", String.valueOf(item.getId()), "1"));
-        List<UserAction> actions = Arrays.asList(new DeleteAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new DeleteAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         assertThat(tracker.findById(item.getId())).isNull();
     }
 
     @Test
-    public void whenExit() {
+    public void whenExit() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(
                 Arrays.asList("0"));
-        Tracker tracker = new Tracker();
-        List<UserAction> actions = Arrays.asList(new Exit());
+        MemTracker tracker = new MemTracker();
+        List<UserAction> actions = Arrays.asList(new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         assertThat(out.toString()).isEqualTo(
                 "Menu." + System.lineSeparator()
@@ -61,15 +62,15 @@ class StartUITest {
     }
 
     @Test
-    public void whenReplaceItemTestOutputIsSuccessfully() {
+    public void whenReplaceItemTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         String replaceName = "New Test Name";
         Input in = new StubInput(
                 Arrays.asList(
                         "0", String.valueOf(one.getId()), replaceName, "1"));
-        List<UserAction> actions = Arrays.asList(new ReplaceAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new ReplaceAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString()).isEqualTo(
@@ -85,13 +86,13 @@ class StartUITest {
     }
 
     @Test
-    public void whenShowAllItemTestOutputIsSuccessfully() {
+    public void whenShowAllItemTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         Input in = new StubInput(
                 Arrays.asList("0", "1"));
-        List<UserAction> actions = Arrays.asList(new ShowAllItemsAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new FindAllAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString()).isEqualTo(
@@ -107,14 +108,14 @@ class StartUITest {
     }
 
     @Test
-    public void whenFindByNameActionTestOutputIsSuccessfully() {
+    public void whenFindByNameActionTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         String findName = "test1";
         Input in = new StubInput(
                 Arrays.asList("0", findName, "1"));
-        List<UserAction> actions = Arrays.asList(new FindItemByNameAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new FindByNameAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString()).isEqualTo(
@@ -130,13 +131,13 @@ class StartUITest {
     }
 
     @Test
-    public void whenFindByIdActionTestOutputIsSuccessfully() {
+    public void whenFindByIdActionTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         Input in = new StubInput(
                 Arrays.asList("0", String.valueOf(one.getId()), "1"));
-        List<UserAction> actions = Arrays.asList(new FindItemByIdAction(out), new Exit());
+        List<UserAction> actions = Arrays.asList(new FindByIdAction(out), new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString()).isEqualTo(
@@ -152,12 +153,12 @@ class StartUITest {
     }
 
     @Test
-    public void whenInvalidExit() {
+    public void whenInvalidExit() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(
                 Arrays.asList("1", "0"));
-        Tracker tracker = new Tracker();
-        List<UserAction> actions = Arrays.asList(new Exit());
+        MemTracker tracker = new MemTracker();
+        List<UserAction> actions = Arrays.asList(new ExitAction());
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
         assertThat(out.toString()).isEqualTo(
