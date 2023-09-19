@@ -16,13 +16,12 @@ public class DeleteAction implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, Store store) {
+    public boolean execute(Input input, Store store) throws SQLException {
         out.println("=== Delete item ===");
         int id = input.askInt("Enter id: ");
-        try {
-            store.delete(id);
+        if (store.delete(id)) {
             out.println("Заявка удалена успешно.");
-        } catch (SQLException e) {
+        } else {
             out.println("Ошибка удаления заявки.");
         }
         return true;
