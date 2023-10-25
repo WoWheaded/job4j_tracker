@@ -41,8 +41,7 @@ public class HbmTracker implements Store, AutoCloseable {
                             "UPDATE Item SET name = :fName, created = :fCreated WHERE id = :fId")
                     .setParameter("fName", item.getName())
                     .setParameter("fCreated", item.getCreated())
-                    .setParameter("fId", id)
-                    .executeUpdate();
+                    .setParameter("fId", id);
             session.getTransaction().commit();
             replaceItemById = true;
         } catch (Exception e) {
@@ -92,7 +91,7 @@ public class HbmTracker implements Store, AutoCloseable {
 
     @Override
     public List<Item> findByName(String key) {
-        List<Item> itemsByNameFounded = null;
+        List<Item> itemsByNameFounded = new ArrayList<>();
         Session session = sf.openSession();
         try {
             session.beginTransaction();
